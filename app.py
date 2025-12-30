@@ -4,7 +4,8 @@ A simple Streamlit app that summarizes text using AI
 """
 
 import streamlit as st
-from summarizer import summarize_text
+from summarizer import summarize_text, validate_input
+from utils import count_words, count_characters, estimate_reading_time
 
 # Page configuration
 st.set_page_config(
@@ -66,6 +67,15 @@ st.markdown("""
         margin-top: 1rem;
     }
     
+    /* Stats styling */
+    .stats-box {
+        background: #f8f9fa;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        display: inline-block;
+        margin-right: 1rem;
+    }
+    
     /* Footer styling */
     .footer {
         text-align: center;
@@ -91,10 +101,19 @@ input_text = st.text_area(
     help="Paste any text you want to summarize. Works best with 100-5000 words."
 )
 
-# Word count display
+# Stats display
 if input_text:
-    word_count = len(input_text.split())
-    st.caption(f"📊 Word count: **{word_count}** words")
+    word_count = count_words(input_text)
+    char_count = count_characters(input_text)
+    reading_time = estimate_reading_time(input_text)
+    
+    col_stat1, col_stat2, col_stat3 = st.columns(3)
+    with col_stat1:
+        st.metric("📊 Words", word_count)
+    with col_stat2:
+        st.metric("🔤 Characters", char_count)
+    with col_stat3:
+        st.metric("⏱️ Reading Time", reading_time)
 
 # Columns for buttons
 col1, col2, col3 = st.columns([1, 2, 1])
