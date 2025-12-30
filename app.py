@@ -124,19 +124,31 @@ with col2:
 # Summarize action
 if summarize_btn:
     if input_text.strip():
-        with st.spinner("🔄 Generating summary..."):
-            result = summarize_text(input_text)
-            
-            if result["success"]:
-                st.success("✅ Summary generated successfully!")
-                st.markdown("### 📋 Summary")
-                st.markdown(f"""
-                <div class="summary-box">
-                    {result["summary"]}
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                st.error(f"❌ {result['error']}")
+        # Validate input first
+        validation = validate_input(input_text)
+        
+        if not validation["valid"]:
+            st.warning(f"⚠️ {validation['error']}")
+        else:
+            with st.spinner("🔄 Generating summary..."):
+                result = summarize_text(input_text)
+                
+                if result["success"]:
+                    st.success("✅ Summary generated successfully!")
+                    st.markdown("### 📋 Summary")
+                    st.markdown(f"""
+                    <div class="summary-box">
+                        {result["summary"]}
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Show summary statistics
+                    summary_words = count_words(result["summary"])
+                    original_words = count_words(input_text)
+                    reduction = round((1 - summary_words / original_words) * 100, 1) if original_words > 0 else 0
+                    st.caption(f"📉 Reduced from {original_words} to {summary_words} words ({reduction}% reduction)")
+                else:
+                    st.error(f"❌ {result['error']}")
     else:
         st.warning("⚠️ Please enter some text to summarize.")
 
