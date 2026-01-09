@@ -85,9 +85,18 @@ User Input → Validation → API Request → AI Processing → Summary Output
 AI-Text-Summarizer/
 ├── app.py              # Main Streamlit application
 ├── summarizer.py       # Summarization logic
+├── utils.py            # Utility functions
+├── config.py           # Configuration management
+├── constants.py        # Application constants
+├── validators.py       # Input validation
+├── exceptions.py       # Custom exceptions
+├── logger.py           # Logging configuration
 ├── requirements.txt    # Python dependencies
 ├── .env.example        # Environment template
 ├── .gitignore          # Git ignore rules
+├── CONTRIBUTING.md     # Contribution guidelines
+├── SECURITY.md         # Security policy
+├── LICENSE             # MIT License
 └── README.md           # Documentation
 ```
 
