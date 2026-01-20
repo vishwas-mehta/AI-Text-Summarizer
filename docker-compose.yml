@@ -1,0 +1,53 @@
+# AI Text Summarizer - Docker Compose Configuration
+# For local development and production deployment
+
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-text-summarizer
+    ports:
+      - "8501:8501"
+    environment:
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    env_file:
+      - .env
+    volumes:
+      # Mount for development (hot reload)
+      - ./app.py:/app/app.py:ro
+      - ./summarizer.py:/app/summarizer.py:ro
+      - ./utils.py:/app/utils.py:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development service with additional tools
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-summarizer-dev
+    ports:
+      - "8502:8501"
+    environment:
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: streamlit run app.py --server.runOnSave=true
+
+networks:
+  default:
+    name: ai-summarizer-network
