@@ -183,10 +183,6 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 
 See [SECURITY.md](SECURITY.md) for security policy and reporting vulnerabilities.
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ---
 
 *Built with ❤️ using Python and Streamlit | Powered by Hugging Face 🤗*
